@@ -2,6 +2,55 @@
 run("CLIJ2 Macro Extensions", "cl_device=[Quadro RTX 3000]");
 setBatchMode(false);
 
+/*
+ *  Script for segmenting crops of cerebellar organoid stacks with Labkit
+ *  Christopher Schmied
+ *  Prototype script
+ *  
+ *  
+ *  IMPORTANT: 
+ *  	Inputs are the crops WITHOUT standardization.
+ *  	When I standardized the data I resaved them without the extra channels.
+ *  	Thus the crops after standardization cannot be segmented with this script.
+ *  	There is only one classifier for both time points.
+ *  	Thus, there is only the classifier for TP14 present.
+ *  
+ *  INPUTS: 
+ *  	1. The crops WITHOUT standardization in cerebellar_organoid_dataset_crops:
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_cleaned/
+ *  	
+ *  	2. An output directory.
+ *  	
+ *  	3. The directory that points to the classifiers.
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_LabkitClassifier/LabkitClassifier_originalData/
+ *  	
+ *  	4. The name of the classifiers are hard coded in processFile() function.
+ *  	File suffix.
+ *  	
+ *  OUTPUTS:
+ *  	Output generated in cerebellar_organoid_results
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-08-02_2ndRun
+ *  	
+ *  	1. <file-name>_Meas.csv - Measurements
+ *  	
+ *  	2. <file-name>_map2-sox2_Vis.tif - segmentation of the entire organoid
+ *  		Result of classifier:
+ *  		/CombinedCh2Ch3or4/C2-C4-Crop1-20220201-14-1-002-0.classifier
+ *  		
+ *  	3. <file-name>_map2_Seg.tif - Binary mask of map2 segmentation
+ *  		Result of classifier:
+ *  		/Ch2/C2-Crop-1-20220201-14-1-002-0.classifier
+ *  	
+ *  	4. <file-name>_map2_Vis.tif - Mask of map2 segmentation overlayed on map2 channel
+ *  	
+ *  	5. <file-name>_sox2_Seg.tif - - Binary mask of sox2 segmentation
+ *  		Result of classifier:
+ *  		/Ch3or4/C4-Crop-1-20220201-14-1-002-0.classifier
+ *  		
+ *  	6. <file-name>_sox2_Vis.tif - Mask of sox2 segmentation overlayed on map2 channel
+ *  	
+ */
+
 saveSettings();
 run("Colors...", "foreground=white background=black selection=yellow");
 run("Options...", "iterations=1 count=1 black");
@@ -14,10 +63,6 @@ run("Options...", "iterations=1 count=1 black");
 #@ File (label = "Output directory", style = "directory") output
 #@ File (label = "Classifier input directory", style = "directory") classifierFolder
 #@ String (label = "File suffix", value = ".tif") suffix
-
-//imageInputFolder = "/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/AutomaticLabelling/";
-//imageFile = "Crop-1-20220201-14-1-002-0.tif"; 
-//output = "/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/test_output/"
 
 // ------------------------------------------------------------------------------------
 processFolder(imageInputFolder);
