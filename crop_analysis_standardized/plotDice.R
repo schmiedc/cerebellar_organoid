@@ -3,7 +3,7 @@ library(ggplot2)
 library(tidyverse)
 
 # setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/imageStats/")
-setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids//TestFiles/standardized_crops/output_14_Dice/")
+setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids//TestFiles/standardized_crops/output_Dice/")
 # ============================================================================
 # 
 #
@@ -37,14 +37,14 @@ read_table_filename <- function(filename){
   ret$timepoint <- regmatches(basename(filename), regexpr('(?<=\\d{8}-)14|21(?=-\\d)', basename(filename), perl=TRUE))
   ret$name <- regmatches(basename(filename), regexpr('(?<=-14-|-21-).+?(?=-\\d\\d\\d-\\d|-\\d\\D.tif)', basename(filename), perl=TRUE))
   ret$stack <- regmatches(basename(filename), regexpr('(?<=\\d-|\\D-)\\d{3}(?=-\\d)', basename(filename), perl=TRUE))
-  ret$crop <- regmatches(basename(filename), regexpr('(?<=-\\d{3}-).+?(?=_sox2|_map2)', basename(filename), perl=TRUE))
-  ret$channel <- regmatches(basename(filename), regexpr('(?<=_)sox2|map2(?=_Seg_Meas.csv)', basename(filename), perl=TRUE))
+  ret$crop <- regmatches(basename(filename), regexpr('(?<=-\\d{3}-).+?(?=_Meas)', basename(filename), perl=TRUE))
+  ret$channel <- regmatches(basename(filename), regexpr('(?<=norm-C)\\d(?=-Crop)', basename(filename), perl=TRUE))
   ret
 }
 
 # ============================================================================
 # only processes shape results
-file.list <- list.files(recursive=TRUE, pattern = ".*_Seg_Meas.csv", full.names = TRUE )
+file.list <- list.files(recursive=TRUE, pattern = ".*_Meas.csv", full.names = TRUE )
 
 # llply needs plyr package
 filename.table <- llply(file.list, read_table_filename)
@@ -55,12 +55,12 @@ filename.combine <- do.call("rbind", filename.table)
 # reorders columns
 filename.combine1 <- filename.combine[,c(1,5,6,7,8,9,10,11,2,3,4)]
 
-# filter channels and split into separate lists
-split_dataset <- group_split(filename.combine1 %>% group_by(channel))
-map2 <- split_dataset[[1]]
-sox2 <- split_dataset[[2]]
+filename.combine1$channelName[filename.combine1$channel == 2] <- 'MAP2'
+filename.combine1$channelName[filename.combine1$channel == 3] <- 'SOX2'
+filename.combine1$channelName[filename.combine1$channel == 4] <- 'SOX2'
 
-ggplot(filename.combine1, aes(x=ID, y=Dice, fill=channel)) +
+
+ggplot(filename.combine1, aes(x=ID, y=Dice, fill=channelName)) +
   geom_bar(stat="identity") +
   ggtitle("Dice per stack") +
   theme_classic(base_size = 15) +
@@ -69,7 +69,7 @@ ggplot(filename.combine1, aes(x=ID, y=Dice, fill=channel)) +
 
 ggsave('DicePerStack.png')
 
-ggplot(filename.combine1, aes(x=timepoint, y=Dice, fill=channel)) +
+ggplot(filename.combine1, aes(x=timepoint, y=Dice, fill=channelName)) +
   geom_boxplot() +
   theme_classic(base_size = 20) +
   scale_y_continuous(limits = c(0, 1)) +
@@ -84,6 +84,12 @@ ggplot(filename.combine1, aes(x=set, y=Dice, fill=set)) +
   ggtitle("Dice per stack and set")
 
 ggsave('DicePerStackSet.png')
+
+# ============================================================================
+# filter channels and split into separate lists
+split_dataset <- group_split(filename.combine1 %>% group_by(channelName))
+map2 <- split_dataset[[1]]
+sox2 <- split_dataset[[2]]
 
 # plot mean per timepoint
 # Todo: plot StDev and Max per timepoint
@@ -103,7 +109,3 @@ ggplot(sox2, aes(x=timepoint, y=Dice, fill=set)) +
   ggtitle("sox2: Dice per timepoint")
 
 ggsave('DicePerTp_sox2.png')
-
-# get segmentations from DICE mean
-a_around_median <- a %>% filter(RatioIntSox2Map2 < 0.802 & RatioIntSox2Map2 > 0.801)
-b_around_median <- b %>% filter(RatioIntSox2Map2 < 0.742 & RatioIntSox2Map2 > 0.740)
