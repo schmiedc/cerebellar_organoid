@@ -1,9 +1,10 @@
 library(plyr)
 library(ggplot2)
 library(tidyverse)
+library(openxlsx)
 
-# setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/2022-10-19_4thRun/output_seg_14")
-setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/2022-10-19_4thRun/output_seg_21")
+# setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/cerebellar_organoid_results/2022-10-19_4thRun/")
+setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/TestFiles/standardized_crops/ouput_14_test/")
 # ============================================================================
 # 
 #
@@ -52,14 +53,13 @@ filename.table <- llply(file.list, read_table_filename)
 # now rbind is combining them all into one list
 filename.combine <- do.call("rbind", filename.table)
 
-filename.combine
 # reorders columns
 filename.combine1 <- filename.combine[,c(13,14,15,16,17,18,1,2,3,4,5,6,7,8,9,10,11,12)]
 
-
+head(filename.combine1)
 
 # read in treatment table
-treatment_file <- read.csv("/home/christopher.schmied/HT_Docs/Projects/CerebralOrganoids_DA/2022-10-08_4th_Run/clean_crops2.csv", header = TRUE)
+treatment_file <- read.csv("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids//cerebellar_organoid_dataset_crops/clean_crops2.csv", header = TRUE)
 treatment_file$X <- NULL
 
 # clean up dataframes for join
@@ -81,6 +81,11 @@ joined_table$RatioIntMap2 <- joined_table$meanOuterMap2Map2 / joined_table$meanI
 joined_table$RatioIntSox2 <- joined_table$meanOuterSox2Sox2 / joined_table$meanInnerSox2Sox2 
 joined_table$RatioIntSox2Map2 <- joined_table$meanOuterSox2Map2 / joined_table$meanInnerSox2Map2 
 
+
+write.xlsx(joined_table, 'cerebellarOrganoid_results.xlsx', asTable = FALSE, overwrite = TRUE)
+
+# ============================================================================
+# plots
 ggplot(joined_table, aes(x=Treatment, y=RatioSizeMap2, fill=Treatment)) +
   geom_boxplot() +
   theme_classic(base_size = 20) +
@@ -155,6 +160,11 @@ ggplot(joined_table, aes(x=Treatment, y=SizeSox2, fill=Treatment)) +
   geom_boxplot() +
   theme_classic(base_size = 20) +
   ggtitle("SizeSox2")
+
+
+
+# ============================================================================
+# stat tests
 
 head(joined_table)
 a <- subset(joined_table, Treatment == 'A')

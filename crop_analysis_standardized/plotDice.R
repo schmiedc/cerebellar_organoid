@@ -3,7 +3,7 @@ library(ggplot2)
 library(tidyverse)
 
 # setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/imageStats/")
-setwd("/home/christopher.schmied/HT_Docs/Projects/CerebralOrganoids_DA/2022-08-02_2ndRun/")
+setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids//TestFiles/standardized_crops/output_14_Dice/")
 # ============================================================================
 # 
 #

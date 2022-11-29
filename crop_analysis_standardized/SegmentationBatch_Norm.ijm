@@ -1,5 +1,80 @@
 setBatchMode(false);
 
+/*
+ *  Script for segmenting crops of cerebellar organoid stacks with Labkit
+ *  Christopher Schmied
+ *  Prototype script
+ *  
+ *  
+ *  IMPORTANT: 
+ *  	Inputs are the crops WITH standardization.
+ *  	When I standardized the data I resaved them without the extra channels.
+ *  	Thus the crops WITHOUT standardization cannot be segmented with this script.
+ *  	There is a classifier for both time points!
+ *  
+ *  INPUTS: 
+ *  	1. The crops WITH standardization in cerebellar_organoid_dataset_crops:
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_standardized/14/
+ *  	or
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_standardized/21/
+ *  	
+ *  	IMPORTANT: split between TP 14 and TP 21 
+ *  	
+ *  	2. An output directory:
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-10-19_4thRun/output_14/
+ *  	or
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-10-19_4thRun/output_21/
+ *  	
+ *  	IMPORTANT: split between TP 14 and TP 21
+ *  	
+ *  	3. File suffix.
+ *  	
+ *  	4. The directory that points to the classifiers:
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_LabkitClassifier/LabkitClassifier_standardizedData/
+ *  	
+ *  	IMPORTANT: The name of the classifiers are hard coded in processFile() function.
+ *  	IMPORTANT: split between TP 14 and TP 21
+ *  	
+ *  	5. The crops WITHOUT standardization for measurement:
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_cleaned/14/
+ *  	or
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_cleaned/21/
+ *  	
+ *  	IMPORTANT: split between TP 14 and TP 21 
+ *  	
+ *  	
+ *  OUTPUTS:
+ *  	Output generated in cerebellar_organoid_results
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-08-02_2ndRun
+ *  	
+ *  	1. <file-name>_Meas.csv - Measurements
+ *  	
+ *  	2. <file-name>.tif
+ *  		Channel 1 (green): Segmentation of entire organoid
+ *  			Result of classifier for TP 14:
+ *  			/CombinedCh2Ch3or4/C1-norm-Crop-1-20220201-14-1-002-0.classifier
+ *  			Result of classifier for TP 21:
+ *  			/CombinedCh2Ch3or4/C1-norm-Crop-2-20220314-21-8-000-0.classifier
+ *  			
+ *  		Channel 2 (binary gray): Segmentation of Map2
+ *  			Result of classifier for TP 14:
+ *  			/Ch2/norm-C2-Crop-1-20220201-14-1-002-0.classifier
+ *  			Result of classifier for TP 21:
+ *  			/Ch2/norm-C2-Crop-2-20220314-21-8-000-0.classifier
+ *  			
+ *  		Channel 3 (binary cyan): Segmentation of Sox2
+ *  			Result of classifier for TP 14:
+ *  			/Ch3or4/norm-C4-Crop-1-20220201-14-1-002-0.classifier
+ *  			Result of classifier for TP 21:
+ *  			/Ch3or4/norm-C4-Crop-2-20220314-21-8-000-0.classifier
+ *  			
+ *  		Channel 4 (magenta): 8-bit Map2 channel
+ *  		
+ *  		Channel 5 (yellow): 8-bit Sox2 channel
+ *  	
+ */
+
+
 // get Clij2 macro extension going
 run("CLIJ2 Macro Extensions", "cl_device=[Quadro RTX 3000]");
 
@@ -16,15 +91,6 @@ run("Options...", "iterations=1 count=1 black");
 #@ String (label = "File suffix", value = ".tif") suffix
 #@ File (label = "Classifier directory", style = "directory") classifierFolder
 #@ File (label = "Measure directory", style = "directory") measInput
-
-// imageInputFolder = "/run/media/christopher.schmied/QuickBackup/cerebellarOrganoids/Standardize_ManualLabelling/14/";
-// outputImageFolder = "/run/media/christopher.schmied/QuickBackup/cerebellarOrganoids/Standardize_ManualLabelling/14_output/";
-// imageFile = "norm-C2-Crop-2-20220314-14-1-001-0.tif";
-
-// classifierFolder = "/run/media/christopher.schmied/QuickBackup/cerebellarOrganoids/Standardize_AutomaticLabelling/Ch2/";
-
-// TODO: segment combined channel with different classifier
-// TODO: create measurements - area all, area inner, area fraction, intensity inner, intensity outer
 
 processFolder(input);
 

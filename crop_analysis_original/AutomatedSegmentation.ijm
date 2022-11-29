@@ -20,16 +20,18 @@ setBatchMode(false);
  *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_crops/crops_cleaned/
  *  	
  *  	2. An output directory.
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-08-02_2ndRun/
  *  	
  *  	3. The directory that points to the classifiers.
  *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_LabkitClassifier/LabkitClassifier_originalData/
  *  	
- *  	4. The name of the classifiers are hard coded in processFile() function.
- *  	File suffix.
+ *  	IMPORTATN: The name of the classifiers are hard coded in processFile() function.
+ *  	
+ *  	4. File suffix.
  *  	
  *  OUTPUTS:
  *  	Output generated in cerebellar_organoid_results
- *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-08-02_2ndRun
+ *  	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-08-02_2ndRun/
  *  	
  *  	1. <file-name>_Meas.csv - Measurements
  *  	

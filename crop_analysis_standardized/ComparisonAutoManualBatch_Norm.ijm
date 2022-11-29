@@ -1,9 +1,32 @@
 run("CLIJ2 Macro Extensions", "cl_device=[Quadro RTX 3000]");
 
 /*
- * Macro template to process multiple images in a folder
+ * Script to compare automatic segmentation with manual labels
+ * Christopher Schmied
+ * Prototype script
+ * 
+ * IMPORTANT: Only works with outputs of crops WITH standardization
+ * 
+ * INPUT:
+ * 1. Auto Seg input
+ * 	Output of automatic segmentation script (but collected from both timepoints and split):
+ * 	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-11-17_5thRun/input/split/
+ * 
+ * 2. Binary masks (0,1) from manual labeling:
+ * 	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_dataset_labeling/ManualLabeling_masks/
+ * 	
+ * 3. Output directory:
+ * 	smb://storage.fht.org/cerebellarorganoids/cerebellar_organoid_results/2022-11-17_5thRun/output/
+ * 	
+ * 4. File suffix:
+ * 	The suffix of the automatic segmentations: i.e. .tif
+ * 		
+ * OUTPUT:
+ * <file-name>_Meas.csv
+ * Contains area and DICE measurements
+ * To be analyzed by the R script: plotDice.R
  */
-
+ 
 #@ File (label = "Auto Seg input", style = "directory") input
 #@ File (label = "Manual label input", style = "directory") input2
 #@ File (label = "Output directory", style = "directory") output

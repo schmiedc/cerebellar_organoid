@@ -2,8 +2,9 @@ library(plyr)
 library(ggplot2)
 library(tidyverse)
 
-# setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/Crops/imageStats/")
-setwd("/home/christopher.schmied/HT_Docs/Projects/CerebralOrganoids_DA/2022-08-02_2ndRun/")
+# setwd("/home/christopher.schmied/HT_Docs/Projects/CerebralOrganoids_DA/2022-08-02_2ndRun/")
+setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/cerebellar_organoid_results/2022-09-22_3rd_Run/")
+
 # ============================================================================
 # 
 #
