@@ -3,8 +3,8 @@ library(ggplot2)
 library(tidyverse)
 library(openxlsx)
 
-# setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/cerebellar_organoid_results/2022-10-19_4thRun/")
-setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/TestFiles/standardized_crops/ouput_14_test/")
+# setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/TestFiles/standardized_crops/ouput_14_test/")
+setwd("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/cerebellar_organoid_results/2022-10-19_4thRun/")
 # ============================================================================
 # 
 #
@@ -59,7 +59,7 @@ filename.combine1 <- filename.combine[,c(13,14,15,16,17,18,1,2,3,4,5,6,7,8,9,10,
 head(filename.combine1)
 
 # read in treatment table
-treatment_file <- read.csv("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids//cerebellar_organoid_dataset_crops/clean_crops2.csv", header = TRUE)
+treatment_file <- read.csv("/run/user/1338/gvfs/smb-share:server=storage.fht.org,share=cerebellarorganoids/cerebellar_organoid_dataset_crops/clean_crops2.csv", header = TRUE)
 treatment_file$X <- NULL
 
 # clean up dataframes for join
